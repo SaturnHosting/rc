@@ -98,7 +98,7 @@ public class RCModule extends Module {
     );
 
     public RCModule() {
-        super(SaturnRC.CATEGORY, "RC", "An example module that highlights the center of the world.");
+        super(SaturnRC.CATEGORY, "RC", "Module and settings for Saturn RC.");
     }
 
     @Override
