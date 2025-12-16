@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "saturn-rc",
+  "version": "${version}",
+  "name": "Saturn RC",
+  "description": "Chat client made by and for Saturn",
+  "authors": [
+    "Saturn"
+  ],
+  "contact": {
+    "repo": "https://github.com/MeteorDevelopment/meteor-addon-template"
+  },
+  "icon": "assets/saturn/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "meteor": [
+      "dev.saturn.saturnrc.SaturnRC"
+    ]
+  },
+  "mixins": [
+    "saturn-rc.mixins.json"
+  ],
+  "custom": {
+    "meteor-client:color": "225,25,25"
+  },
+  "depends": {
+    "java": ">=21",
+    "minecraft": ["${mc_version}"],
+    "meteor-client": "*"
+  }
+}
