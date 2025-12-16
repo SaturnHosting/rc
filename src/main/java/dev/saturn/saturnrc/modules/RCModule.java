@@ -16,7 +16,7 @@ import net.minecraft.util.math.Box;
 import java.io.IOException;
 
 public class RCModule extends Module {
-    public static SocketClient socketClient;
+    public SocketClient socketClient;
 
     private final SettingGroup sgGeneral = this.settings.getDefaultGroup();
     private final SettingGroup sgPrefix = this.settings.createGroup("Prefix");

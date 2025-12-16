@@ -18,7 +18,7 @@ public class ChatMixin {
     private void onSendChatMessage(String message, CallbackInfo ci) throws IOException {
         if (Modules.get().get(RCModule.class).isActive()) {
             assert mc.player != null;
-            RCModule.socketClient.sendMessage(mc.player.getName().getLiteralString(), message);
+            Modules.get().get(RCModule.class).socketClient.sendMessage(mc.player.getName().getLiteralString(), message);
             ci.cancel();
         }
     }
