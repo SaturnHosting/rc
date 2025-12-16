@@ -10,9 +10,9 @@ Meteor addon client to communicated via Saturn RC (Relay Chat). It allows for Mi
 4. **Connect**: The module will auto-connect when enabled.
 
 ## Configuration
-- **Host**: Server address (default: localhost)
-- **Port**: Server port (default: 25575)
-- **Token**: Authentication token (must match server)
+- **Host**: Server address *(default: 127.0.0.1)*
+- **Port**: Server port *(default: 3000)*
+- **Token**: Authentication token *(must match server)*
 - *+ Other aesthetic settings...*
 
 ## Server Setup
