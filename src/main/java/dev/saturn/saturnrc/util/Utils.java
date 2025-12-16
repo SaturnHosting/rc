@@ -18,7 +18,7 @@ public class Utils {
     }
 
 
-    public static void message(String playerMessage, MessageType type) {
+    public static void chatMessage(String playerMessage, MessageType type) {
         String prefix = Modules.get().get(RCModule.class).prefix.get();
         TextColor prefixColor = Modules.get().get(RCModule.class).prefixColor.get().toTextColor();
 
@@ -38,5 +38,9 @@ public class Utils {
         }
 
         mc.player.sendMessage(prefixText.append(messageText), false);
+    }
+
+    public static void socketMessage(String username, String playerMessage) {
+
     }
 }
