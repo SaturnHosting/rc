@@ -67,7 +67,9 @@ public class RCModule extends Module {
             socketClient = new SocketClient(host.get(), port.get(), token.get());
             socketClient.start();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Utils.chatMessage("Could not connect to socket " + host + ":" + port, Utils.MessageType.ERROR);
+            e.printStackTrace();
+            this.toggle();
         }
 
         super.onActivate();
@@ -75,8 +77,11 @@ public class RCModule extends Module {
 
     @Override
     public void onDeactivate() {
-        socketClient.close();
-        socketClient = null;
+        if(socketClient != null) {
+            socketClient.close();
+            socketClient = null;
+        }
+
         super.onDeactivate();
     }
 }
