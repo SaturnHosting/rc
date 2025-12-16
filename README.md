@@ -2,6 +2,8 @@
 
 Meteor addon to communicated via Saturn RC (Relay Chat). It allows for Minecraft chat communication privately and over multiple servers.
 
+> Disclaimer: This isn't meant to and shouldn't be used to make larger-scale public chat rooms as it really isn't sufficient enough to do so. But feel free to contribute to maybe bring it to that stage!
+
 ## Setup
 
 1. **Build**: `./gradlew runClient`
