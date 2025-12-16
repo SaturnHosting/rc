@@ -1,6 +1,6 @@
 package dev.saturn.saturnrc;
 
-import dev.saturn.saturnrc.commands.CommandExample;
+import dev.saturn.saturnrc.commands.RCCommand;
 import dev.saturn.saturnrc.modules.RCModule;
 import com.mojang.logging.LogUtils;
 import meteordevelopment.meteorclient.addons.MeteorAddon;
@@ -21,7 +21,7 @@ public class SaturnRC extends MeteorAddon {
         Modules.get().add(new RCModule());
 
         // Commands
-        Commands.add(new CommandExample());
+        Commands.add(new RCCommand());
     }
 
     @Override

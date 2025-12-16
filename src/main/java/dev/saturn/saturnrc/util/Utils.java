@@ -5,6 +5,7 @@ import meteordevelopment.meteorclient.systems.modules.Modules;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
+import net.minecraft.util.Formatting;
 
 import java.awt.*;
 
@@ -45,13 +46,32 @@ public class Utils {
                 .styled(style -> style.withColor(usernameColor));
         }
 
-        MutableText messageText = Text.literal(message);
-        switch (type) {
-            case MESSAGE -> messageText.styled(style -> style.withColor(messageColor));
-            case ERROR -> messageText.styled(style -> style.withColor(Color.RED.getRGB()));
-            case WARNING -> messageText.styled(style -> style.withColor(Color.YELLOW.getRGB()));
+        MutableText typeText = Text.literal("");
+        if (type == MessageType.ERROR) {
+            typeText = Text.literal("Error: ")
+                .styled(style -> style.withColor(Formatting.RED));
+        } else if (type == MessageType.WARNING) {
+            typeText = Text.literal("Warning: ")
+                .styled(style -> style.withColor(Formatting.YELLOW));
         }
 
-        mc.player.sendMessage(prefixText.append(nameText).append(messageText), false);
+        MutableText messageText = Text.literal(message);
+
+        switch(type) {
+            case MESSAGE:
+                messageText.styled(style -> style.withColor(messageColor));
+                break;
+            case ERROR:
+                messageText.styled(style -> style.withColor(Formatting.RED));
+                break;
+            case WARNING:
+                messageText.styled(style -> style.withColor(Formatting.YELLOW));
+                break;
+        }
+
+        MutableText finalMessage = prefixText.append(type == MessageType.MESSAGE ? nameText : typeText)
+            .append(messageText);
+
+        mc.player.sendMessage(finalMessage, false);
     }
 }
