@@ -19,6 +19,8 @@ public class RCModule extends Module {
     public static SocketClient socketClient;
 
     private final SettingGroup sgGeneral = this.settings.getDefaultGroup();
+    private final SettingGroup sgPrefix = this.settings.createGroup("Prefix");
+    private final SettingGroup sgMessage = this.settings.createGroup("Message");
 
     public final Setting<String> host = sgGeneral.add(new StringSetting.Builder()
         .name("host")
@@ -43,17 +45,38 @@ public class RCModule extends Module {
         .build()
     );
 
-    public final Setting<String> prefix = sgGeneral.add(new StringSetting.Builder()
+    public final Setting<String> prefix = sgPrefix.add(new StringSetting.Builder()
             .name("prefix")
             .description("Prefix of the messages")
             .defaultValue("[SATURN]")
             .build()
     );
 
-    public final Setting<SettingColor> prefixColor = sgGeneral.add(new ColorSetting.Builder()
+    public final Setting<SettingColor> prefixColor = sgPrefix.add(new ColorSetting.Builder()
         .name("prefix-color")
         .description("The color of the prefix.")
         .defaultValue(Color.GRAY)
+        .build()
+    );
+
+    public final Setting<String> username = sgMessage.add(new StringSetting.Builder()
+        .name("username")
+        .description("Formatting for the username")
+        .defaultValue("<%username%>")
+        .build()
+    );
+
+    public final Setting<SettingColor> usernameColor = sgMessage.add(new ColorSetting.Builder()
+        .name("username-color")
+        .description("The color of the username.")
+        .defaultValue(Color.WHITE)
+        .build()
+    );
+
+    public final Setting<SettingColor> messageColor = sgMessage.add(new ColorSetting.Builder()
+        .name("message-color")
+        .description("The color of the message.")
+        .defaultValue(Color.WHITE)
         .build()
     );
 
