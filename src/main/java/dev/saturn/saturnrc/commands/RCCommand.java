@@ -26,9 +26,9 @@ public class RCCommand extends Command {
             module.toggle();
 
             if (module.isActive()) {
-                info("RC §aenabled§r.");
+                info("§aenabled§r");
             } else {
-                info("RC §cdisabled§r.");
+                info("§cdisabled§r");
             }
 
             return SINGLE_SUCCESS;

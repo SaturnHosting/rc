@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "saturn-rc",
   "version": "${version}",
-  "name": "Saturn RC",
+  "name": "RC",
   "description": "Chat client made by and for Saturn",
   "authors": [
     "Saturn"
@@ -21,7 +21,7 @@
     "saturn-rc.mixins.json"
   ],
   "custom": {
-    "meteor-client:color": "225,25,25"
+    "meteor-client:color": "128,128,128"
   },
   "depends": {
     "java": ">=21",

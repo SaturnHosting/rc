@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 
 public class SaturnRC extends MeteorAddon {
     public static final Logger LOG = LogUtils.getLogger();
-    public static final Category CATEGORY = new Category("SaturnRC");
+    public static final Category CATEGORY = new Category("Saturn RC");
 
     @Override
     public void onInitialize() {
