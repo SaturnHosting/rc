@@ -7,18 +7,34 @@ public class SocketClient {
     private Socket socket;
     private BufferedReader in;
     private BufferedWriter out;
+    private String username;
 
-    public SocketClient(String host, int port, String token) throws IOException {
+    public SocketClient(String host, int port, String token, String username) throws IOException {
+        this.username = username;
         socket = new Socket(host, port);
 
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 
-        sendRaw("AUTH " + token);
+        sendRaw("AUTH " + token + " " + username);
+
+        String authResponse = in.readLine();
+        if (authResponse == null || !authResponse.startsWith("AUTH_SUCCESS")) {
+            String errorMsg = authResponse != null && authResponse.startsWith("ERROR ")
+                ? authResponse.substring(6)
+                : "Unknown error";
+            throw new IOException("Authentication failed: " + errorMsg);
+        }
+
+        System.out.println("Authentication successful for user: " + username);
     }
 
     public void sendMessage(String username, String message) throws IOException {
-        sendRaw("MESSAGE " +  username + " " + message);
+        sendRaw("MESSAGE " + username + " " + message);
+    }
+
+    public void sendOnline() throws IOException {
+        sendRaw("ONLINE");
     }
 
     private void sendRaw(String msg) throws IOException {
@@ -34,17 +50,29 @@ public class SocketClient {
                 while ((line = in.readLine()) != null) {
                     System.out.println("Received: " + line);
 
-                    if (line.startsWith("MESSAGE ")) {
+                    if (line.startsWith("ONLINE ")) {
+                        String playersList = line.substring("ONLINE ".length());
+                        String[] players = playersList.split(",");
+
+                        StringBuilder playerMessage = new StringBuilder("Online players: ");
+                        for (int i = 0; i < players.length; i++) {
+                            if (i > 0) playerMessage.append(", ");
+                            playerMessage.append(players[i]);
+                        }
+                        Utils.chatMessage(playerMessage.toString(), Utils.MessageType.INFO);
+                    }
+                    else if (line.startsWith("MESSAGE ")) {
                         String messageContent = line.substring("MESSAGE ".length());
                         Utils.chatMessage(messageContent, Utils.MessageType.MESSAGE);
-                    } else if (line.startsWith("ERROR ")) {
+                    }
+                    else if (line.startsWith("ERROR ")) {
                         String errorContent = line.substring("ERROR ".length());
                         Utils.chatMessage(errorContent, Utils.MessageType.ERROR);
                     }
-
                 }
             } catch (IOException e) {
-                System.out.println("Disconnected from server");
+                System.out.println("Disconnected from server: " + e.getMessage());
+                Utils.chatMessage("Disconnected from server: " + e.getMessage(), Utils.MessageType.ERROR);
             } finally {
                 close();
             }
@@ -55,6 +83,10 @@ public class SocketClient {
     }
 
     public void close() {
-        try { socket.close(); } catch (IOException ignored) {}
+        try {
+            if (socket != null && !socket.isClosed()) {
+                socket.close();
+            }
+        } catch (IOException ignored) {}
     }
 }

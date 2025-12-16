@@ -111,7 +111,8 @@ public class RCModule extends Module {
     @Override
     public void onActivate() {
         try {
-            socketClient = new SocketClient(host.get(), port.get(), token.get());
+            assert mc.player != null;
+            socketClient = new SocketClient(host.get(), port.get(), token.get(), mc.player.getName().getLiteralString());
             socketClient.start();
         } catch (IOException e) {
             Utils.chatMessage("Could not connect to socket " + host + ":" + port, Utils.MessageType.ERROR);

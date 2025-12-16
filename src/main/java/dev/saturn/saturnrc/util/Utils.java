@@ -15,6 +15,7 @@ public class Utils {
     public enum MessageType {
         MESSAGE,
         ERROR,
+        INFO,
         WARNING
     }
 
@@ -66,6 +67,9 @@ public class Utils {
                 break;
             case WARNING:
                 messageText.styled(style -> style.withColor(Formatting.YELLOW));
+                break;
+            case INFO:
+                messageText.styled(style -> style.withColor(Formatting.GRAY));
                 break;
         }
 
