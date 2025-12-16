@@ -1,5 +1,8 @@
 package dev.saturn.saturnrc.util;
 
+import dev.saturn.saturnrc.modules.RCModule;
+import meteordevelopment.meteorclient.systems.modules.Modules;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -8,6 +11,7 @@ public class SocketClient {
     private BufferedReader in;
     private BufferedWriter out;
     private String username;
+    private volatile boolean running = true;
 
     public SocketClient(String host, int port, String token, String username) throws IOException {
         this.username = username;
@@ -47,7 +51,7 @@ public class SocketClient {
         Thread listener = new Thread(() -> {
             try {
                 String line;
-                while ((line = in.readLine()) != null) {
+                while (running && (line = in.readLine()) != null) {
                     System.out.println("Received: " + line);
 
                     if (line.startsWith("ONLINE ")) {
@@ -69,10 +73,22 @@ public class SocketClient {
                         String errorContent = line.substring("ERROR ".length());
                         Utils.chatMessage(errorContent, Utils.MessageType.ERROR);
                     }
+                    else if (line.startsWith("CONNECTION ") && Modules.get().get(RCModule.class).connectionMsgs.get()) {
+                        String connectionInfo = line.substring("CONNECTION ".length());
+                        if (connectionInfo.contains(" joined")) {
+                            String joinedUser = connectionInfo.substring(0, connectionInfo.length() - 7);
+                            Utils.chatMessage(joinedUser + " connected", Utils.MessageType.INFO);
+                        } else if (connectionInfo.contains(" left")) {
+                            String leftUser = connectionInfo.substring(0, connectionInfo.length() - 5);
+                            Utils.chatMessage(leftUser + " disconnected", Utils.MessageType.INFO);
+                        }
+                    }
                 }
             } catch (IOException e) {
-                System.out.println("Disconnected from server: " + e.getMessage());
-                Utils.chatMessage("Disconnected from server: " + e.getMessage(), Utils.MessageType.ERROR);
+                if (running) {
+                    System.out.println("Disconnected from server: " + e.getMessage());
+                    Utils.chatMessage("Disconnected from server: " + e.getMessage(), Utils.MessageType.ERROR);
+                }
             } finally {
                 close();
             }
@@ -83,6 +99,7 @@ public class SocketClient {
     }
 
     public void close() {
+        running = false;
         try {
             if (socket != null && !socket.isClosed()) {
                 socket.close();

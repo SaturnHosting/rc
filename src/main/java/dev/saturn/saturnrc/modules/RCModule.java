@@ -83,6 +83,14 @@ public class RCModule extends Module {
         .build()
     );
 
+    public final Setting<Boolean> connectionMsgs = sgMessage.add(new BoolSetting.Builder()
+        .name("connection-messages")
+        .description("Send connection messages whenever someone joins/leaves the rc.")
+        .defaultValue(true)
+        .build()
+    );
+
+
     public final Setting<Boolean> normalMessages = sgExclude.add(new BoolSetting.Builder()
         .name("normal-messages")
         .description("Exclude normal messages from being shown in the chat. (Only works in 6b6t)that")
