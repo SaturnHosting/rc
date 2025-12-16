@@ -51,7 +51,7 @@ public class RCModule extends Module {
     public final Setting<String> prefix = sgPrefix.add(new StringSetting.Builder()
             .name("prefix")
             .description("Prefix of the messages")
-            .defaultValue("[SATURN]")
+            .defaultValue("[RC]")
             .build()
     );
 
