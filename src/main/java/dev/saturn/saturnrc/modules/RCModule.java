@@ -20,6 +20,29 @@ public class RCModule extends Module {
 
     private final SettingGroup sgGeneral = this.settings.getDefaultGroup();
 
+    public final Setting<String> host = sgGeneral.add(new StringSetting.Builder()
+        .name("host")
+        .description("Host of the socket server")
+        .defaultValue("127.0.0.1")
+        .build()
+    );
+
+    public final Setting<Integer> port = sgGeneral.add(new IntSetting.Builder()
+        .name("port")
+        .description("Port of the socket server")
+        .min(0)
+        .max(65535)
+        .defaultValue(3000)
+        .build()
+    );
+
+    public final Setting<String> token = sgGeneral.add(new StringSetting.Builder()
+        .name("token")
+        .description("Auth token for the socket server")
+        .defaultValue("token")
+        .build()
+    );
+
     public final Setting<String> prefix = sgGeneral.add(new StringSetting.Builder()
             .name("prefix")
             .description("Prefix of the messages")
@@ -41,7 +64,7 @@ public class RCModule extends Module {
     @Override
     public void onActivate() {
         try {
-            socketClient = new SocketClient("127.0.0.1", 3000, "token");
+            socketClient = new SocketClient(host.get(), port.get(), token.get());
             socketClient.start();
         } catch (IOException e) {
             throw new RuntimeException(e);
