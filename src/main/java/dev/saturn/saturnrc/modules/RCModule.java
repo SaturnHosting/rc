@@ -83,6 +83,13 @@ public class RCModule extends Module {
         .build()
     );
 
+    public final Setting<Boolean> normalMessages = sgExclude.add(new BoolSetting.Builder()
+        .name("normal-messages")
+        .description("Exclude normal messages from being shown in the chat. (Only works in 6b6t)that")
+        .defaultValue(true)
+        .build()
+    );
+
     public final Setting<Boolean> meteorCommands = sgExclude.add(new BoolSetting.Builder()
         .name("meteor-commands")
         .description("Allow meteor commands to be excluded from sending through RC.")
