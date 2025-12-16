@@ -7,7 +7,7 @@ Meteor addon to communicated via Saturn RC (Relay Chat). It allows for Minecraft
 ## Usage
 
 1. `./gradlew build` or download the [latest build](https://github.com/SaturnHosting/rc/releases/tag/snapshot).
-2. Put it in your `.minecraft/mods` folder along with Meteor 1.21.4
+2. Put it in your `.minecraft/mods` folder along with Meteor 1.21.4.
 3. Configure the RC module and enable it.
 5. The module will auto-connect to the server when enabled.
 
