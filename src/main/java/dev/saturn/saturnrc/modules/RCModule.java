@@ -14,6 +14,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class RCModule extends Module {
     public SocketClient socketClient;
@@ -21,6 +23,7 @@ public class RCModule extends Module {
     private final SettingGroup sgGeneral = this.settings.getDefaultGroup();
     private final SettingGroup sgPrefix = this.settings.createGroup("Prefix");
     private final SettingGroup sgMessage = this.settings.createGroup("Message");
+    private final SettingGroup sgExclude = this.settings.createGroup("Exclude");
 
     public final Setting<String> host = sgGeneral.add(new StringSetting.Builder()
         .name("host")
@@ -77,6 +80,20 @@ public class RCModule extends Module {
         .name("message-color")
         .description("The color of the message.")
         .defaultValue(Color.WHITE)
+        .build()
+    );
+
+    public final Setting<Boolean> meteorCommands = sgExclude.add(new BoolSetting.Builder()
+        .name("meteor-commands")
+        .description("Allow meteor commands to be excluded from sending through RC.")
+        .defaultValue(true)
+        .build()
+    );
+
+    public final Setting<List<String>> otherPrefixes = sgExclude.add(new StringListSetting.Builder()
+        .name("other-prefixes")
+        .description("Allow other prefixes to be excluded from sending through RC.")
+        .defaultValue(Arrays.asList("*", ".", ";"))
         .build()
     );
 
