@@ -82,6 +82,14 @@ public class SocketClient {
                             String leftUser = connectionInfo.substring(0, connectionInfo.length() - 5);
                             Utils.chatMessage(leftUser + " disconnected", Utils.MessageType.INFO);
                         }
+                    } else if (line.startsWith("KEEPALIVE ")) {
+                        String challengeStr = line.substring("KEEPALIVE ".length());
+                        try {
+                            sendRaw("KEEPALIVE_RESPONSE " + challengeStr);
+                            System.out.println("Responded to keepalive challenge: " + challengeStr);
+                        } catch (IOException e) {
+                            System.out.println("Failed to respond to keepalive: " + e.getMessage());
+                        }
                     }
                 }
             } catch (IOException e) {
