@@ -5,6 +5,7 @@ import meteordevelopment.meteorclient.systems.modules.Modules;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 public class SocketClient {
     private Socket socket;
@@ -15,7 +16,10 @@ public class SocketClient {
 
     public SocketClient(String host, int port, String token, String username) throws IOException {
         this.username = username;
-        socket = new Socket(host, port);
+
+        socket = new Socket();
+        socket.connect(new java.net.InetSocketAddress(host, port), 5000); // 5 second connection timeout
+        socket.setSoTimeout(30000);
 
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -42,9 +46,11 @@ public class SocketClient {
     }
 
     private void sendRaw(String msg) throws IOException {
-        out.write(msg);
-        out.newLine();
-        out.flush();
+        synchronized (out) {
+            out.write(msg);
+            out.newLine();
+            out.flush();
+        }
     }
 
     public void start() {
@@ -92,6 +98,11 @@ public class SocketClient {
                         }
                     }
                 }
+            } catch (SocketTimeoutException e) {
+                if (running) {
+                    System.out.println("Socket read timeout: " + e.getMessage());
+                    Utils.chatMessage("Connection timeout to RC server", Utils.MessageType.ERROR);
+                }
             } catch (IOException e) {
                 if (running) {
                     System.out.println("Disconnected from server: " + e.getMessage());
@@ -102,6 +113,7 @@ public class SocketClient {
             }
         });
 
+        listener.setName("RC-Listener-Thread");
         listener.setDaemon(true);
         listener.start();
     }

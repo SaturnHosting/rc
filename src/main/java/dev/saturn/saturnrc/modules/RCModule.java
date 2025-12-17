@@ -19,6 +19,7 @@ import java.util.List;
 
 public class RCModule extends Module {
     public SocketClient socketClient;
+    private Thread connectionThread;
 
     private final SettingGroup sgGeneral = this.settings.getDefaultGroup();
     private final SettingGroup sgPrefix = this.settings.createGroup("Prefix");
@@ -49,10 +50,10 @@ public class RCModule extends Module {
     );
 
     public final Setting<String> prefix = sgPrefix.add(new StringSetting.Builder()
-            .name("prefix")
-            .description("Prefix of the messages")
-            .defaultValue("[RC]")
-            .build()
+        .name("prefix")
+        .description("Prefix of the messages")
+        .defaultValue("[RC]")
+        .build()
     );
 
     public final Setting<SettingColor> prefixColor = sgPrefix.add(new ColorSetting.Builder()
@@ -90,7 +91,6 @@ public class RCModule extends Module {
         .build()
     );
 
-
     public final Setting<Boolean> normalMessages = sgExclude.add(new BoolSetting.Builder()
         .name("normal-messages")
         .description("Exclude normal messages from being shown in the chat. (Only works in 6b6t)that")
@@ -118,22 +118,40 @@ public class RCModule extends Module {
 
     @Override
     public void onActivate() {
-        try {
-            assert mc.player != null;
-            socketClient = new SocketClient(host.get(), port.get(), token.get(), mc.player.getName().getLiteralString());
-            socketClient.start();
-        } catch (IOException e) {
-            Utils.chatMessage("Could not connect to socket " + host + ":" + port, Utils.MessageType.ERROR);
-            e.printStackTrace();
-            this.toggle();
-        }
+        assert mc.player != null;
+        final String playerName = mc.player.getName().getLiteralString();
+
+        connectionThread = new Thread(() -> {
+            try {
+                socketClient = new SocketClient(host.get(), port.get(), token.get(), playerName);
+                socketClient.start();
+                Utils.chatMessage("Connected to RC server at " + host.get() + ":" + port.get(), Utils.MessageType.INFO);
+            } catch (IOException e) {
+                Utils.chatMessage("Could not connect to socket " + host.get() + ":" + port.get() + ": " + e.getMessage(), Utils.MessageType.ERROR);
+                e.printStackTrace();
+
+                mc.execute(() -> {
+                    if (this.isActive()) {
+                        this.toggle();
+                    }
+                });
+            }
+        });
+
+        connectionThread.setName("RC-Connection-Thread");
+        connectionThread.setDaemon(true);
+        connectionThread.start();
 
         super.onActivate();
     }
 
     @Override
     public void onDeactivate() {
-        if(socketClient != null) {
+        if (connectionThread != null && connectionThread.isAlive()) {
+            connectionThread.interrupt();
+        }
+
+        if (socketClient != null) {
             socketClient.close();
             socketClient = null;
         }

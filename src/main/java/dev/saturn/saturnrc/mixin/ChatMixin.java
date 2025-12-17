@@ -20,6 +20,7 @@ public class ChatMixin {
     @Inject(method = "sendChatMessage", at = @At("HEAD"), cancellable = true)
     private void onSendChatMessage(String message, CallbackInfo ci) throws IOException {
         RCModule rcModule = Modules.get().get(RCModule.class);
+        if(rcModule.socketClient == null) return;
 
         if (rcModule == null || !rcModule.isActive()) return;
 
@@ -37,6 +38,7 @@ public class ChatMixin {
         }
 
         assert mc.player != null;
+        assert rcModule.socketClient != null;
         try {
             rcModule.socketClient.sendMessage(mc.player.getName().getString(), message);
         } catch (IOException e) {
