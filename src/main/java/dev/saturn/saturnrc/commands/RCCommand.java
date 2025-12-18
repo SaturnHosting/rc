@@ -11,6 +11,8 @@ public class RCCommand extends Command {
         super("rc", "RC chat commands");
     }
 
+    public static boolean rcChatEnabled = true;
+
     @Override
     public void build(LiteralArgumentBuilder<CommandSource> builder) {
         builder.then(literal("toggle").executes(context -> {
@@ -21,12 +23,12 @@ public class RCCommand extends Command {
                 return SINGLE_SUCCESS;
             }
 
-            module.toggle();
+            rcChatEnabled = !rcChatEnabled;
 
-            if (module.isActive()) {
-                info("§aenabled§r");
+            if (rcChatEnabled) {
+                info("§aMessages are sent in RC Chat.§r");
             } else {
-                info("§cdisabled§r");
+                info("§cMessages are sent in Minecraft Chat.§r");
             }
 
             return SINGLE_SUCCESS;

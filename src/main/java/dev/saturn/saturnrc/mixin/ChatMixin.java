@@ -1,5 +1,6 @@
 package dev.saturn.saturnrc.mixin;
 
+import dev.saturn.saturnrc.commands.RCCommand;
 import dev.saturn.saturnrc.modules.RCModule;
 import dev.saturn.saturnrc.util.Utils;
 import meteordevelopment.meteorclient.systems.config.Config;
@@ -25,6 +26,8 @@ public class ChatMixin {
         if (rcModule == null || !rcModule.isActive()) return;
 
         if (!rcModule.meteorCommands.get()) return;
+
+        if (!RCCommand.rcChatEnabled) return;
 
         String meteorPrefix = Config.get().prefix.get();
         List<String> otherPrefixes = rcModule.otherPrefixes.get();

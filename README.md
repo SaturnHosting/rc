@@ -25,5 +25,5 @@ Meteor addon to communicated via Saturn RC (Relay Chat). It allows for Minecraft
 Run your own server: [rc-server](https://github.com/SaturnHosting/rc-server)
 
 ## Commands
-- `.rc toggle` - Toggle the module on/off
+- `.rc toggle` - toggle between normal and RC chat
 - `.rc online` - list all online people
